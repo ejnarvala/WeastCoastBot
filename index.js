@@ -5,7 +5,8 @@ client.on("ready", () => {
   console.log(`Logged in as ${client.user.tag}!`)
 })
 
-const re = /\w+ is over/
+const reWordIsOver = /\w+ *is *over/
+const reIsOver = / *is *over/
 
 client.on("message", msg => {
     if (msg.author.bot) return
@@ -14,10 +15,10 @@ client.on("message", msg => {
         msg.reply('pong!')
     }
 
-    if (re.test(msg.content)) {
+    if (reWordIsOver.test(msg.content)) {
         console.log('message from ' + msg.author.username + ' flagged')
-        startIdx = msg.content.search(re)
-        endIdx = msg.content.search(' is over')
+        startIdx = msg.content.search(reWordIsOver)
+        endIdx = msg.content.search(reIsOver)
         let thing = msg.content.substring(startIdx, endIdx)
         let reply = '[Fake News Warning]: ' + thing + ' may not actually be over'
         msg.reply(reply)

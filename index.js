@@ -15,7 +15,7 @@ client.on("message", msg => {
     }
 
     if (re.test(msg.content)) {
-        console.log('message from ' + msg.author + 'flagged')
+        console.log('message from ' + msg.author.username + ' flagged')
         startIdx = msg.content.search(re)
         endIdx = msg.content.search(' is over')
         let thing = msg.content.substring(startIdx, endIdx)

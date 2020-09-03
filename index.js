@@ -5,8 +5,8 @@ client.on("ready", () => {
   console.log(`Logged in as ${client.user.tag}!`)
 })
 
-const reWordIsOver = /\w+ *is *over/
-const reIsOver = / *is *over/
+const reWordIsOver = /\w+ *(i*s|are) *over/
+const reIsOver = / *(i*s|are) *over/
 
 client.on("message", msg => {
     if (msg.author.bot) return

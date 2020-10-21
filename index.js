@@ -6,11 +6,12 @@ client.on("ready", () => {
   console.log(`Logged in as ${client.user.tag}!`)
 })
 
-const reWordIsOver = /\w+ *i*'s *over/
-const reIsOver = / *i*'s *over/
-
 const wikiCmd = "/wiki"
 const wiki_search_url = "https://en.wikipedia.org/w/api.php?action=opensearch&limit=1&namespace=0&format=json&search="
+
+const reWordIsOver = /\w+ *(i*'s|are) *over/
+const reIsOver = / *(i*'*s|are) *over/
+
 
 client.on("message", msg => {
     if (msg.author.bot) return

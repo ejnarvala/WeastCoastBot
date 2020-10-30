@@ -44,12 +44,19 @@ client.on("message", msg => {
 
     if (msg.content.startsWith(stockCmd) & msg.content.length > wikiCmd.length) {
         let symbol = msg.content.substring(stockCmd.length).trim().toUpperCase()
-        console.log("SYMBOL: " + symbol)
         yahooFinance.quote(symbol, ['price'])
             .then(quote => {
                 let message = utils.messageFromQuote(quote);
                 msg.channel.send(message);
             })
+    }
+
+    if (msg.content.trim().toLowerCase() == "bad bot") {
+        msg.reply("I'm sorry :(");
+    }
+
+    if (msg.content.trim().toLowerCase() == "good bot") {
+        msg.reply("Thanks! :)")
     }
 })
 

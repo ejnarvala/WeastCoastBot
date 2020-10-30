@@ -1,6 +1,10 @@
 require("dotenv").config()
 const fetch = require("node-fetch");
 const Discord = require("discord.js")
+var yahooFinance = require('yahoo-finance');
+
+const utils = require('./utils');
+
 const client = new Discord.Client()
 client.on("ready", () => {
   console.log(`Logged in as ${client.user.tag}!`)
@@ -12,6 +16,7 @@ const wiki_search_url = "https://en.wikipedia.org/w/api.php?action=opensearch&li
 const reWordIsOver = /\w+ *(i*'s|are) *over/
 const reIsOver = / *(i*'*s|are) *over/
 
+const stockCmd = "/stonk"
 
 client.on("message", msg => {
     if (msg.author.bot) return
@@ -30,13 +35,22 @@ client.on("message", msg => {
     }
 
     if (msg.content.startsWith(wikiCmd) & msg.content.length > wikiCmd.length) {
-        let term = msg.content.substr(wikiCmd.length)
+        let term = msg.content.substr(wikiCmd.length).trim()
         let search = wiki_search_url + term
-        console.log("TERM: " + term)
-        console.log("SEARCH_URL: " + search)
         fetch(search)
             .then(response => response.json())
             .then(data => msg.channel.send(data[3][0]))
+    }
+
+    if (msg.content.startsWith(stockCmd) & msg.content.length > wikiCmd.length) {
+        let symbol = msg.content.substring(stockCmd.length).trim().toUpperCase()
+        console.log("SYMBOL: " + symbol)
+        yahooFinance.quote(symbol, ['price'])
+            .then(quote => {
+                console.log(quote);
+                let message = utils.messageFromQuote(quote);
+                msg.channel.send(message);
+            })
     }
 })
 

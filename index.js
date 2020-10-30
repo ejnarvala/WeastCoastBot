@@ -46,7 +46,7 @@ client.on("message", msg => {
     if (msg.content.startsWith(stockCmd) & msg.content.length > wikiCmd.length) {
         let term = msg.content.substring(stockCmd.length).trim()
         if (term.length <= 5) {
-            yahooFinance.quote(symbol, ['price'])
+            yahooFinance.quote(term, ['price'])
             .then(quote => {
                 msg.channel.send(utils.messageFromQuote(quote));
             })

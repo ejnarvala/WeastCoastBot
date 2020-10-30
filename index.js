@@ -17,6 +17,7 @@ const reWordIsOver = /\w+ *(i*'s|are) *over/
 const reIsOver = / *(i*'*s|are) *over/
 
 const stockCmd = "/stonk"
+const ticker_search_url = "http://d.yimg.com/aq/autoc?region=US&lang=en-US&query="
 
 client.on("message", msg => {
     if (msg.author.bot) return
@@ -43,11 +44,18 @@ client.on("message", msg => {
     }
 
     if (msg.content.startsWith(stockCmd) & msg.content.length > wikiCmd.length) {
-        let symbol = msg.content.substring(stockCmd.length).trim().toUpperCase()
-        yahooFinance.quote(symbol, ['price'])
-            .then(quote => {
-                let message = utils.messageFromQuote(quote);
-                msg.channel.send(message);
+        let term = msg.content.substring(stockCmd.length).trim().toUpperCase()
+        fetch(ticker_search_url + term)
+            .then(resp => resp.json())
+            .then(data => {
+                let results = data.ResultSet.Result;
+                if (results.length) {
+                    let symbol = results[0].symbol;
+                    yahooFinance.quote(symbol, ['price'])
+                        .then(quote => {
+                            msg.channel.send(utils.messageFromQuote(quote));
+                        })
+                }
             })
     }
 
@@ -55,8 +63,8 @@ client.on("message", msg => {
         msg.reply("I'm sorry :(");
     }
 
-    if (msg.content.trim().toLowerCase() == "good bot") {
-        msg.reply("Thanks! :)")
+    if (msg.content.trim().toLowerCase() == "good bot" && !msg.author.bot) {
+        msg.reply("Good human :)")
     }
 })
 

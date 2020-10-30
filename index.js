@@ -22,7 +22,7 @@ const ticker_search_url = "http://d.yimg.com/aq/autoc?region=US&lang=en-US&query
 client.on("message", msg => {
     if (msg.author.bot) return
 
-    if (msg.content == 'wcb-ping') {
+    if (msg.content == '/ping') {
         msg.reply('pong!')
     }
 
@@ -39,24 +39,31 @@ client.on("message", msg => {
         let term = msg.content.substr(wikiCmd.length).trim()
         let search = wiki_search_url + term
         fetch(search)
-            .then(response => response.json())
-            .then(data => msg.channel.send(data[3][0]))
+        .then(response => response.json())
+        .then(data => msg.channel.send(data[3][0]))
     }
 
     if (msg.content.startsWith(stockCmd) & msg.content.length > wikiCmd.length) {
-        let term = msg.content.substring(stockCmd.length).trim().toUpperCase()
-        fetch(ticker_search_url + term)
+        let term = msg.content.substring(stockCmd.length).trim()
+        if (term.length <= 5) {
+            yahooFinance.quote(symbol, ['price'])
+            .then(quote => {
+                msg.channel.send(utils.messageFromQuote(quote));
+            })
+        } else {
+            fetch(ticker_search_url + term)
             .then(resp => resp.json())
             .then(data => {
                 let results = data.ResultSet.Result;
                 if (results.length) {
                     let symbol = results[0].symbol;
                     yahooFinance.quote(symbol, ['price'])
-                        .then(quote => {
-                            msg.channel.send(utils.messageFromQuote(quote));
-                        })
+                    .then(quote => {
+                        msg.channel.send(utils.messageFromQuote(quote));
+                    })
                 }
-            })
+            })    
+        }
     }
 
     if (msg.content.trim().toLowerCase() == "bad bot") {

@@ -47,7 +47,6 @@ client.on("message", msg => {
         console.log("SYMBOL: " + symbol)
         yahooFinance.quote(symbol, ['price'])
             .then(quote => {
-                console.log(quote);
                 let message = utils.messageFromQuote(quote);
                 msg.channel.send(message);
             })

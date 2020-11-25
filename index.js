@@ -16,6 +16,8 @@ const wiki_search_url = "https://en.wikipedia.org/w/api.php?action=opensearch&li
 const reWordIsOver = /\w+ *(i*'s|are) *over/
 const reIsOver = / *(i*'*s|are) *over/
 
+const rePopWithoutSmoke = /\bpop(?!.*smoke)/
+
 const stockCmd = "/stonk"
 const ticker_search_url = "http://d.yimg.com/aq/autoc?region=US&lang=en-US&query="
 
@@ -27,7 +29,6 @@ client.on("message", msg => {
     }
 
     if (reWordIsOver.test(msg.content)) {
-        console.log('message from ' + msg.author.username + ' flagged')
         startIdx = msg.content.search(reWordIsOver)
         endIdx = msg.content.search(reIsOver)
         let thing = msg.content.substring(startIdx, endIdx)
@@ -73,6 +74,11 @@ client.on("message", msg => {
     if (msg.content.trim().toLowerCase() == "good bot" && !msg.author.bot) {
         msg.reply("Good human :)")
     }
+
+    if (rePopWithoutSmoke.test(msg.content)) {
+        msg.reply("You cannot say pop and forget the smoke.")
+    }
+
 })
 
 client.login(process.env.BOT_TOKEN)

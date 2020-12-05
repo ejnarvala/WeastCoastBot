@@ -28,11 +28,8 @@ function messageFromQuote(quote) {
             { name: 'Market Price', value: formatPrice(priceData.regularMarketPrice) }, 
             { name: 'Day Low', value: formatPrice(priceData.regularMarketDayLow), inline: true }, 
             { name: 'Day High', value: formatPrice(priceData.regularMarketDayHigh), inline: true}, 
-            // { name: 'Last Open', value: formatPrice(priceData.regularMarketOpen), inline: true }, 
-            // { name: 'Last Close', value: formatPrice(priceData.regularMarketPreviousClose), inline: true },
             { name: 'Market Change', value: formatPrice(priceData.regularMarketChange) },
             { name: 'Percent Market Change', value: formatPercent(priceData.regularMarketChangePercent) })
-        // .setFooter("Data by Yahoo Finance")
         .setFooter(priceData.quoteSourceName)
         .setTimestamp()
 }

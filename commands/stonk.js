@@ -1,20 +1,16 @@
 const Discord = require("discord.js")
+const fetch = require("node-fetch");
+const yahooFinance = require('yahoo-finance');
 
-
-const formatPrice = (price) => {
-    let output = `$${Math.abs(price).toFixed(2)}`;
-    if (price < 0) {
-        output = '-' + output
-    }
-    return output
-};
-
-const formatPercent = (percent) => `${percent.toFixed(2)}%`;
+const ticker_search_url = "http://d.yimg.com/aq/autoc?region=US&lang=en-US&query="
 
 const stockUpImage = "https://i.redd.it/award_images/t5_22cerq/s5edqq9abef41_StonksRising.png";
 const stockDownImage = "https://i.redd.it/award_images/t5_22cerq/ree13odobef41_StonksFalling.png"
 
-function messageFromQuote(quote) {
+const formatPrice = (price) => `${price < 0 ? '-' : ''}$${Math.abs(price).toFixed(2)}`;
+const formatPercent = (percent) => `${percent.toFixed(2)}%`;
+
+const responseFromQuote = (quote) => {
     let priceData = quote.price;
     let summary = quote.summaryProfile;
     let priceUp = priceData.regularMarketChange > 0;
@@ -32,7 +28,31 @@ function messageFromQuote(quote) {
             { name: 'Percent Market Change', value: formatPercent(priceData.regularMarketChangePercent) })
         .setFooter(priceData.quoteSourceName)
         .setTimestamp()
-}
- 
+};
 
-module.exports = { messageFromQuote }
+const getQuoteFromSymbol = async symbol => await yahooFinance.quote(symbol, ['price', 'summaryProfile']);
+
+const lookupSymbol = async searchTerm => {
+    if (searchTerm.length <= 5) {
+        return searchTerm;
+    }
+    let response = await fetch(ticker_search_url + searchTerm);
+    let data = await response.json();
+    let results = data.ResultSet.Result;
+    if (results.length) {
+        return results[0].symbol;
+    }
+};
+
+module.exports = {
+    name: 'stonk',
+    description: 'Stock info lookup',
+    args: true,
+    usage: '<ticker or search term>',
+    async execute(message, args) {
+        let symbol = await lookupSymbol(args.join(' '));
+        let quote = await getQuoteFromSymbol(symbol)
+        let response = responseFromQuote(quote);
+        message.channel.send(response);
+    }
+};

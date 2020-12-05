@@ -1,84 +1,81 @@
 require("dotenv").config()
-const fetch = require("node-fetch");
+const fs = require('fs');
+const { prefix } = require('./config.json')
 const Discord = require("discord.js")
-var yahooFinance = require('yahoo-finance');
 
-const utils = require('./utils');
-
-const client = new Discord.Client()
-client.on("ready", () => {
-  console.log(`Logged in as ${client.user.tag}!`)
-})
-
-const wikiCmd = "/wiki"
-const wiki_search_url = "https://en.wikipedia.org/w/api.php?action=opensearch&limit=1&namespace=0&format=json&search="
-
-const reWordIsOver = /\w+ *(i*'s|are) *over/
+// regex
+const reWordIsOver = /\w+ *(i*'*s|are) *over/
 const reIsOver = / *(i*'*s|are) *over/
-
 const rePopWithoutSmoke = /\bpop(?!.*smoke)/
 
-const stockCmd = "/stonk"
-const ticker_search_url = "http://d.yimg.com/aq/autoc?region=US&lang=en-US&query="
 
-client.on("message", msg => {
-    if (msg.author.bot) return
+const client = new Discord.Client()
 
-    if (msg.content == '/ping') {
-        msg.reply('pong!')
-    }
 
-    if (reWordIsOver.test(msg.content)) {
-        startIdx = msg.content.search(reWordIsOver)
-        endIdx = msg.content.search(reIsOver)
-        let thing = msg.content.substring(startIdx, endIdx)
-        let reply = '[Fake News Warning]: ' + thing + ' may not actually be over'
-        msg.reply(reply)
-    }
+client.commands = new Discord.Collection();
+const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));
+for (const file of commandFiles) {
+    const command = require(`./commands/${file}`);
+    client.commands.set(command.name, command);
+}
 
-    if (msg.content.startsWith(wikiCmd) & msg.content.length > wikiCmd.length) {
-        let term = msg.content.substr(wikiCmd.length).trim()
-        let search = wiki_search_url + term
-        fetch(search)
-        .then(response => response.json())
-        .then(data => msg.channel.send(data[3][0]))
-    }
 
-    if (msg.content.startsWith(stockCmd) & msg.content.length > stockCmd.length) {
-        let term = msg.content.substring(stockCmd.length).trim()
-        if (term.length <= 5) {
-            yahooFinance.quote(term, ['price', 'summaryProfile'])
-            .then(quote => {
-                msg.channel.send(utils.messageFromQuote(quote));
-            })
-        } else {
-            fetch(ticker_search_url + term)
-            .then(resp => resp.json())
-            .then(data => {
-                let results = data.ResultSet.Result;
-                if (results.length) {
-                    let symbol = results[0].symbol;
-                    yahooFinance.quote(symbol, ['price', 'summaryProfile'])
-                    .then(quote => {
-                        msg.channel.send(utils.messageFromQuote(quote));
-                    })
-                }
-            })    
+// message handler
+client.on("message", message => {
+    if (message.author.bot) return;
+
+    // command handler
+    const args = message.content.slice(prefix.length).trim().split(/ +/);
+    const commandName = args.shift().toLowerCase();
+    
+    if (client.commands.has(commandName)) {
+        const command = client.commands.get(commandName);
+    
+        if (command.guildOnly && message.channel.type === 'dm') {
+            return message.reply('I can\'t execute that command inside DMs!');
         }
+    
+        if (command.args && !args.length) {
+            let reply = "You didn't provide any arguments."
+            if (command.usage) {
+                reply += `\nThe proper usage would be: \`${prefix}${command.name} ${command.usage}\``;
+            }
+            return message.reply(reply);
+        }
+            
+        try {
+            command.execute(message, args);
+        } catch (error) {
+            console.error(error);
+        }
+    } else { 
+        // non-command based code:
+        if (reWordIsOver.test(message.content)) {
+            startIdx = message.content.search(reWordIsOver)
+            endIdx = message.content.search(reIsOver)
+            let thing = message.content.substring(startIdx, endIdx)
+            let reply = `:warning: '${thing}' may not actually be over`
+            message.reply(reply)
+        }
+        
+        if (rePopWithoutSmoke.test(message.content)) {
+            message.reply("You cannot say pop and forget the smoke :triumph:")
+        }
+
+        if (message.content.trim().toLowerCase() == "bad bot") {
+            message.reply("I'll try to be better :smiling_face_with_tear:");
+        }
+    
+        if (message.content.trim().toLowerCase() == "good bot") {
+            message.reply("Thanks human :slight_smile:")
+        }
+    
     }
 
-    if (msg.content.trim().toLowerCase() == "bad bot") {
-        msg.reply("I'm sorry :(");
-    }
+});
 
-    if (msg.content.trim().toLowerCase() == "good bot" && !msg.author.bot) {
-        msg.reply("Good human :)")
-    }
-
-    if (rePopWithoutSmoke.test(msg.content)) {
-        msg.reply("You cannot say pop and forget the smoke.")
-    }
-
-})
+client.on("ready", () => {
+    console.log(`Logged in as ${client.user.tag}!`)
+});
 
 client.login(process.env.BOT_TOKEN)

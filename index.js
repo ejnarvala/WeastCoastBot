@@ -44,10 +44,10 @@ client.on("message", msg => {
         .then(data => msg.channel.send(data[3][0]))
     }
 
-    if (msg.content.startsWith(stockCmd) & msg.content.length > wikiCmd.length) {
+    if (msg.content.startsWith(stockCmd) & msg.content.length > stockCmd.length) {
         let term = msg.content.substring(stockCmd.length).trim()
         if (term.length <= 5) {
-            yahooFinance.quote(term, ['price'])
+            yahooFinance.quote(term, ['price', 'summaryProfile'])
             .then(quote => {
                 msg.channel.send(utils.messageFromQuote(quote));
             })
@@ -58,7 +58,7 @@ client.on("message", msg => {
                 let results = data.ResultSet.Result;
                 if (results.length) {
                     let symbol = results[0].symbol;
-                    yahooFinance.quote(symbol, ['price'])
+                    yahooFinance.quote(symbol, ['price', 'summaryProfile'])
                     .then(quote => {
                         msg.channel.send(utils.messageFromQuote(quote));
                     })

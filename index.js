@@ -55,11 +55,11 @@ client.on("message", message => {
             endIdx = message.content.search(reIsOver)
             let thing = message.content.substring(startIdx, endIdx)
             let reply = `:warning: '${thing}' may not actually be over`
-            message.reply(reply)
+            message.channel.send(reply);
         }
         
         if (rePopWithoutSmoke.test(message.content)) {
-            message.reply("You cannot say pop and forget the smoke :triumph:")
+            message.reply("You cannot say pop and forget the smoke :triumph:");
         }
 
         if (message.content.trim().toLowerCase() == "bad bot") {
@@ -67,7 +67,7 @@ client.on("message", message => {
         }
     
         if (message.content.trim().toLowerCase() == "good bot") {
-            message.reply("Thanks human :slight_smile:")
+            message.reply("Thanks human :slight_smile:");
         }
     
     }

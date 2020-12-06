@@ -51,7 +51,7 @@ class PollResponse {
     toEmbed() {
         let embed = new Discord.MessageEmbed()
         .setTitle(questionPrefix + this.poll.question)
-        .setFooter(`Poll ends in ${(pollTimeoutMs / 60000).toFixed(2)} minutes`)
+        .setFooter(`Poll ends in ${(pollTimeoutMs / 60000)} minutes`)
         .setColor("#2ecc71")
         .setTimestamp();
 

@@ -14,7 +14,7 @@ class Poll {
 
     constructor(question, optionNames) {
         this.question = question;
-        if (optionNames) {
+        if (optionNames.length) {
             this.options = optionNames.map(
                 (name, index) => new PollOption({name: name, index: index}));
         } else {

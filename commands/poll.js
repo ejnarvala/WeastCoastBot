@@ -2,7 +2,7 @@ const { PollService, Poll } = require('./domain/poll/poll_service.js');
 const Discord = require("discord.js")
 
 const questionPrefix = "Poll: ";
-const pollTimeoutMs = 5000;
+const pollTimeoutMs = 600000;
 const defaultFieldValue = '\u200B';
 
 const validateArgs = (args) => {

@@ -2,13 +2,14 @@ const { PollService, Poll } = require('./domain/poll/poll_service.js');
 const Discord = require("discord.js")
 
 const questionPrefix = "Poll: ";
-const pollTimeoutMs = 600000;
+const pollTimeoutMs = 5000;
+const defaultFieldValue = '\u200B';
 
 const validateArgs = (args) => {
     if (args.length > 10) throw "Cannot have more than 10 options.";
 }
 
-const optionValue = (votes) => `${votes} Vote${votes == 1 ? '' : 's'}\n${""}`;
+const optionValue = (votes) => `${votes} Vote${votes == 1 ? '' : 's'}`;
 
 const updateFieldVotes = (reaction) => {
     let currentEmbed = reaction.message.embeds[0];
@@ -29,12 +30,22 @@ const endPoll = (collectedReactions, message) => {
     if (collectedReactions.size) {
         let collectedReactionsArray = collectedReactions.array();
         collectedReactionsArray.sort((a, b) => b.count - a.count);
+        for (let i = 0; i < changedEmbed.fields.length; i++) {
+            changedEmbed.fields[i].value = optionValue(0)
+        }
         if (collectedReactionsArray.length > 1 && collectedReactionsArray[0].count == collectedReactionsArray[1].count) {
             changedEmbed.setDescription("Winner: Tie");
         } else {
             let winningIndex = PollService.getIndexFromIcon(collectedReactionsArray[0].emoji.name);
             let winningField = currentEmbed.fields[winningIndex];
             changedEmbed.setDescription(`Winner: ${winningField.name}`);
+
+            for (const reaction of collectedReactionsArray) {
+                let index = PollService.getIndexFromIcon(reaction.emoji.name);
+                changedEmbed.fields[index].value = optionValue(reaction.count - 1);
+            }
+            
+            console.log(changedEmbed.fields);
         }
     }
     message.edit(changedEmbed);
@@ -57,8 +68,7 @@ class PollResponse {
 
         for (const option of this.poll.options) {
             let name = `${PollService.iconFromIndex(option.index)} ${option.name}`;
-            let value = optionValue(0);
-            embed.addField(name, value);
+            embed.addField(name, defaultFieldValue);
         }
         return embed;
     }
@@ -67,7 +77,7 @@ class PollResponse {
 
 
 module.exports = {
-    name: 'poll',
+    name: 'poll2',
     description: 'Create polls voted on by reactions',
     usage: `<question>, [<option 1>, <option 2>, ...]`,
     args: true,
@@ -99,8 +109,8 @@ module.exports = {
         }
 
         const collector = sentMessage.createReactionCollector(filter, { time: pollTimeoutMs, dispose: true});
-        collector.on('collect', (reaction) => updateFieldVotes(reaction));
-        collector.on('remove', (reaction) => updateFieldVotes(reaction));
+        // collector.on('collect', (reaction) => updateFieldVotes(reaction));
+        // collector.on('remove', (reaction) => updateFieldVotes(reaction));
         collector.on('end', (collectedReactions, other) => endPoll(collectedReactions, sentMessage));
     }
 };

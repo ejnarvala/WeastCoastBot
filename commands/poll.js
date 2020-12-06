@@ -44,7 +44,7 @@ const endPoll = (collectedReactions, message) => {
                 let index = PollService.getIndexFromIcon(reaction.emoji.name);
                 changedEmbed.fields[index].value = optionValue(reaction.count - 1);
             }
-            
+
             console.log(changedEmbed.fields);
         }
     }
@@ -77,7 +77,7 @@ class PollResponse {
 
 
 module.exports = {
-    name: 'poll2',
+    name: 'poll',
     description: 'Create polls voted on by reactions',
     usage: `<question>, [<option 1>, <option 2>, ...]`,
     args: true,

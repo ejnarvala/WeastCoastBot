@@ -16,7 +16,7 @@ const makeEmbedFromSearchResponse = (response) => {
         { name: "Actors", value: response.Actors, inline: true },
         { name: "Writer", value: response.Writer, inline: true },
         { name: "Runtime", value: response.Runtime, inline: true },
-        { name: "IMDB ID", value: response.imdbId, inline: true },
+        { name: "IMDB ID", value: response.imdbID, inline: true },
         { name: "IMDB Rating", value: response.imdbRating, inline: true }
     )
     .setDescription(response.Plot)

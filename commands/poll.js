@@ -27,12 +27,12 @@ const endPoll = (collectedReactions, message) => {
 
     changedEmbed.setColor("#d21c38");
     changedEmbed.setFooter(`This poll ended with ${collectedReactions.size} votes`);
-    if (collectedReactions.size) {
+    for (let i = 0; i < changedEmbed.fields.length; i++) {
+        changedEmbed.fields[i].value = optionValue(0)
+    }
+     if (collectedReactions.size) {
         let collectedReactionsArray = collectedReactions.array();
         collectedReactionsArray.sort((a, b) => b.count - a.count);
-        for (let i = 0; i < changedEmbed.fields.length; i++) {
-            changedEmbed.fields[i].value = optionValue(0)
-        }
         if (collectedReactionsArray.length > 1 && collectedReactionsArray[0].count == collectedReactionsArray[1].count) {
             changedEmbed.setDescription("Winner: Tie");
         } else {

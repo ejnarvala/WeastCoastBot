@@ -9,7 +9,7 @@ const stockUpImage = "https://i.redd.it/award_images/t5_22cerq/s5edqq9abef41_Sto
 const stockDownImage = "https://i.redd.it/award_images/t5_22cerq/ree13odobef41_StonksFalling.png"
 
 const formatPrice = (price) => `${price < 0 ? '-' : ''}$${Math.abs(price).toFixed(2)}`;
-const formatPercent = (percent) => `${percent.toFixed(2)}%`;
+const formatPercent = (percent) => `${(percent * 100).toFixed(2)}%`;
 
 const responseFromQuote = (quote) => {
     let priceData = quote.price;

@@ -32,10 +32,10 @@ const responseFromQuote = (quote) => {
 };
 
 const responseFromHistorical = (historical) => {
-    let startData = historical[0];
-    let endData = historical[historical.length - 1];
+    let startData = historical[historical.length - 1];
+    let endData = historical[0];
     let priceDiff = endData.close - startData.open;
-    let percentChange = (priceDiff / startData.open) * 100.0;
+    let percentChange = (priceDiff / startData.open);
     let priceUp = priceDiff > 0;
     let symbol = startData.symbol;
     return new Discord.MessageEmbed()

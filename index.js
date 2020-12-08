@@ -25,9 +25,10 @@ client.on("message", message => {
     if (message.author.bot) return;
 
     // command handler
-    const args = message.content.slice(prefix.length).trim().split(/ +/);
+    var args = message.content.slice(prefix.length).trim().split(/ +/);
     const commandName = args.shift().toLowerCase();
-    
+    args = args.join(' ').split(',');
+
     if (client.commands.has(commandName)) {
         const command = client.commands.get(commandName);
     
@@ -36,7 +37,7 @@ client.on("message", message => {
         }
     
         if (command.args && !args.length) {
-            let reply = "You didn't provide any arguments."
+            let reply = "You didn't provide any arguments.";
             if (command.usage) {
                 reply += `\nThe proper usage would be: \`${prefix}${command.name} ${command.usage}\``;
             }

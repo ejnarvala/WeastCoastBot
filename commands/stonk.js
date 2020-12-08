@@ -1,4 +1,5 @@
-const Discord = require("discord.js")
+const Discord = require("discord.js");
+const chrono = require('chrono-node');
 const fetch = require("node-fetch");
 const yahooFinance = require('yahoo-finance');
 
@@ -30,7 +31,34 @@ const responseFromQuote = (quote) => {
         .setTimestamp()
 };
 
+const responseFromHistorical = (historical) => {
+    let startData = historical[0];
+    let endData = historical[historical.length - 1];
+    let priceDiff = endData.close - startData.open;
+    let percentChange = (priceDiff / startData.open) * 100.0;
+    let priceUp = priceDiff > 0;
+    let symbol = startData.symbol;
+    return new Discord.MessageEmbed()
+        .setTitle(symbol.toUpperCase())
+        .setURL(`https://finance.yahoo.com/quote/${symbol}`)
+        .setColor(priceUp ? "#6a9d51" : "#d21c38")
+        .setThumbnail(priceUp ? stockUpImage :stockDownImage )
+        .addFields(
+            { name: `Open - ${startData.date.toDateString()}`, value: formatPrice(startData.open)},
+            { name: `Close - ${endData.date.toDateString()}`, value: formatPrice(endData.close)},
+            { name: 'Percent Change', value: formatPercent(percentChange) })
+        .setFooter(`Data by Yahoo Finance`)
+        .setTimestamp()
+
+}
+
 const getQuoteFromSymbol = async symbol => await yahooFinance.quote(symbol, ['price', 'summaryProfile']);
+const getHistoricalFromSymbolAndDates = async (symbol, dateResult) => {
+    let from = dateResult.start.date();
+    let to = (dateResult.end) ? dateResult.end.date() : new Date();
+    return await yahooFinance.historical({symbol: symbol, from: from, to: to});
+}
+
 
 const lookupSymbol = async searchTerm => {
     if (searchTerm.length <= 5) {
@@ -39,10 +67,20 @@ const lookupSymbol = async searchTerm => {
     let response = await fetch(ticker_search_url + searchTerm);
     let data = await response.json();
     let results = data.ResultSet.Result;
-    if (results.length) {
-        return results[0].symbol;
+    if (!results.length) {
+        throw `Could not find ticker for '${searchTerm}'`;
     }
+    return results[0].symbol;
 };
+
+const validDateRange = (chronoParseResults) => {
+    if (chronoParseResults.length == 0) return false;
+    let dateResult = chronoParseResults[0];
+    let now = new Date();
+    if (!dateResult.end && dateResult.start.date().toDateString() == now.toDateString()) return false;
+    if (dateResult.start && dateResult.end && dateResult.start > dateResult.end) return false;;
+    return true;
+}
 
 module.exports = {
     name: 'stonk',
@@ -50,9 +88,20 @@ module.exports = {
     args: true,
     usage: '<ticker or search term>',
     async execute(message, args) {
-        let symbol = await lookupSymbol(args.join(' '));
-        let quote = await getQuoteFromSymbol(symbol)
-        let response = responseFromQuote(quote);
+        let symbol = await lookupSymbol(args[0]);
+        let dateResults = [];
+        if (args.length > 1) {
+            dateResults = chrono.parse(args[1]);
+        }
+        
+        let response;
+        if (validDateRange(dateResults)) {
+            let historical = await getHistoricalFromSymbolAndDates(symbol, dateResults[0]);
+            response = responseFromHistorical(historical);
+        } else {
+            let quote = await getQuoteFromSymbol(symbol);
+            response = responseFromQuote(quote);
+        }
         message.channel.send(response);
     }
 };

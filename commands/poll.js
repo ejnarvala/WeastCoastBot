@@ -82,7 +82,6 @@ module.exports = {
     usage: `<question>, [<option 1>, <option 2>, ...]`,
     args: true,
     async execute(message, args) {
-        args = args.join(' ').split(',');
         try {
             validateArgs(args)
         } catch (error) {

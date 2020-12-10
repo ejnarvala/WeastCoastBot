@@ -59,7 +59,7 @@ client.on("message", message => {
             message.channel.send(reply);
         }
         
-        if (rePopWithoutSmoke.test(message.content)) {
+        if (rePopWithoutSmoke.test(message.content.trim().toLowerCase())) {
             message.reply("You cannot say pop and forget the smoke :triumph:");
         }
 

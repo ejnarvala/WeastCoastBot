@@ -6,7 +6,7 @@ const Discord = require("discord.js")
 // regex
 const reWordIsOver = /\w+ *(i*'*s|are) *over/
 const reIsOver = / *(i*'*s|are) *over/
-const rePopWithoutSmoke = /\bpop(?!.*smoke)/
+const rePopWithoutSmoke = /\bpop +(?!.*smoke)/
 
 
 const client = new Discord.Client()

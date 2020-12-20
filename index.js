@@ -4,7 +4,7 @@ const { prefix } = require('./config.json')
 const Discord = require("discord.js")
 
 // regex
-const reWordIsOver = /\w+ *(i*'*s|are) *over/
+const reWordIsOver = /\w+ *(i*'*`*s|are) *over\b/
 const reIsOver = / *(i*'*s|are) *over/
 const rePopWithoutSmoke = /\bpop\b(?!.*smoke)/
 

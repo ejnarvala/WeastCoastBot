@@ -35,8 +35,8 @@ client.on("message", message => {
         if (command.guildOnly && message.channel.type === 'dm') {
             return message.reply('I can\'t execute that command inside DMs!');
         }
-    
-        if (command.args && !args.length) {
+
+        if (command.args && args.length == 1 && args[0] == '') {
             let reply = "You didn't provide any arguments.";
             if (command.usage) {
                 reply += `\nThe proper usage would be: \`${prefix}${command.name} ${command.usage}\``;

@@ -104,7 +104,7 @@ module.exports = {
     name: 'crypto',
     description: 'Crypto info lookup',
     args: true,
-    usage: '<crypto ticker>, [exchange (default: kraken)]',
+    usage: '<crypto ticker> [, exchange (default: kraken)]',
     async execute(message, args) {
         let symbol = args[0].toUpperCase();
         let exchange;

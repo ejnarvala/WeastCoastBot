@@ -3,7 +3,7 @@ const chrono = require('chrono-node');
 const fetch = require("node-fetch");
 const yahooFinance = require('yahoo-finance');
 
-const ticker_search_url = "http://d.yimg.com/aq/autoc?region=US&lang=en-US&query="
+const tickerSearchUrl = "http://d.yimg.com/aq/autoc?region=US&lang=en-US&query="
 
 const stockUpImage = "https://i.redd.it/award_images/t5_22cerq/s5edqq9abef41_StonksRising.png";
 const stockDownImage = "https://i.redd.it/award_images/t5_22cerq/ree13odobef41_StonksFalling.png"
@@ -64,7 +64,7 @@ const lookupSymbol = async searchTerm => {
     if (searchTerm.length <= 5) {
         return searchTerm;
     }
-    let response = await fetch(ticker_search_url + searchTerm);
+    let response = await fetch(tickerSearchUrl + searchTerm);
     let data = await response.json();
     let results = data.ResultSet.Result;
     if (!results.length) {
@@ -86,7 +86,7 @@ module.exports = {
     name: 'stonk',
     description: 'Stock info lookup',
     args: true,
-    usage: '<ticker or search term>',
+    usage: '<ticker or search term> [, <reference time for historical data>]',
     async execute(message, args) {
         let symbol = await lookupSymbol(args[0]);
         let dateResults = [];

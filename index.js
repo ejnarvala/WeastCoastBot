@@ -4,9 +4,9 @@ const { prefix } = require('./config.json')
 const Discord = require("discord.js")
 
 // regex
-const reWordIsOver = /\w+ *(i*'*s|are) *over/
+const reWordIsOver = /\w+ *(i*'*`*’*s|are) *over\b/
 const reIsOver = / *(i*'*s|are) *over/
-const rePopWithoutSmoke = /\bpop(?!.*smoke)/
+const rePopWithoutSmoke = /\bpop\b(?!.*smoke)/
 
 
 const client = new Discord.Client()
@@ -59,7 +59,7 @@ client.on("message", message => {
             message.channel.send(reply);
         }
         
-        if (rePopWithoutSmoke.test(message.content)) {
+        if (rePopWithoutSmoke.test(message.content.trim().toLowerCase())) {
             message.reply("You cannot say pop and forget the smoke :triumph:");
         }
 

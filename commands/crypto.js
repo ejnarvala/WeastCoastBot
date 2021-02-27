@@ -99,19 +99,19 @@ class OneDaySummary {
 
 const binanceClient = new BinanceClient();
 const cryptoWatchClient = new CryptoWatchClient();
-
+const defaultExchange = "binance"
 module.exports = {
     name: 'crypto',
     description: 'Crypto info lookup',
     args: true,
-    usage: '<crypto ticker> [, exchange (default: kraken)]',
+    usage: `<crypto ticker> [, exchange (default: ${defaultExchange})]`,
     async execute(message, args) {
         let symbol = args[0].toUpperCase();
         let exchange;
         if (args.length > 1) {
             exchange = args[1].trim().toLowerCase();
         } else {
-            exchange = "kraken";
+            exchange = defaultExchange
         }
 
         let summary;

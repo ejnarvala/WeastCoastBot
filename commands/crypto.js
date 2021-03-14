@@ -1,24 +1,8 @@
 const Discord = require("discord.js");
-const fetch = require("node-fetch");
+const { HttpClient } = require('./lib/http/client.js');
 
-class Client {
-    constructor(baseUrl) {
-        this.baseUrl = baseUrl
-    }
 
-    async _request(path) {
-        let url = this.baseUrl + path
-        let response = await fetch(url);
-        if (!response.ok) {
-            console.log(`Unsuccessful request to ${url} - ${response.status}: ${response.statusText}`)
-            return {};
-        }
-        let json = await response.json();
-        return json;
-    }
-}
-
-class CryptoWatchClient extends Client {
+class CryptoWatchClient extends HttpClient {
     constructor() {
         super("https://api.cryptowat.ch")
     }
@@ -30,7 +14,7 @@ class CryptoWatchClient extends Client {
 
 }
 
-class BinanceClient extends Client {
+class BinanceClient extends HttpClient {
     constructor() {
         super("https://api.binance.com/api/v3")
     }

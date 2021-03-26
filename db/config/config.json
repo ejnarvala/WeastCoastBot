@@ -8,6 +8,9 @@
   },
   "production": {
     "use_env_variable": "DATABASE_URL",
-    "ssl": true
+    "ssl": true,
+    "dialectOptions": {
+      "ssl": true
+    }
   }
 }

@@ -7,10 +7,15 @@
     "dev": "nodemon index.js"
   },
   "dependencies": {
+    "amqplib": "*",
     "chrono-node": "^2.1.10",
     "discord.js": "^12.3.1",
     "dotenv": "^8.2.0",
     "node-fetch": "^2.6.1",
+    "pg": "^8.5.1",
+    "pg-hstore": "^2.3.3",
+    "sequelize": "^6.5.1",
+    "sequelize-cli": "^6.2.0",
     "yahoo-finance": "^0.3.6"
   },
   "devDependencies": {

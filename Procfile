@@ -1,1 +1,1 @@
-worker: node index.js
+worker: npx sequelize db:migrate && node index.js

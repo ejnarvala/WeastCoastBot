@@ -7,11 +7,6 @@
     "dialect": "postgres"
   },
   "production": {
-    "username": "root",
-    "password": null,
-    "database": "wcb_production",
-    "host": "localhost",
-    "dialect": "postgres",
     "use_env_variable": "DATABASE_URL"
   }
 }

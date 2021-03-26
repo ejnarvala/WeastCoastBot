@@ -1,0 +1,20 @@
+version: "3.7"
+services:
+  postgres:
+    image: postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: wcb_development
+    ports: 
+      - '5432:5432'
+    volumes:
+      - wcb-db:/var/lib/postgresql/data
+  rabbitmq:
+    image: rabbitmq:3-management
+    ports:
+      - '5672:5662'
+      - '15672:15672'
+
+volumes:
+  wcb-db:

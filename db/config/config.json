@@ -1,0 +1,12 @@
+{
+  "development": {
+    "username": "postgres",
+    "password": "postgres",
+    "database": "wcb_development",
+    "host": "localhost",
+    "dialect": "postgres"
+  },
+  "production": {
+    "use_env_variable": "DATABASE_URL"
+  }
+}

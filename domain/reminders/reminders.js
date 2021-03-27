@@ -14,7 +14,7 @@ const checkForReminders = async (client) => {
     for (let reminder of reminders) {
         let channel = await client.channels.fetch(reminder.channelId);
         channel.messages.fetch(reminder.messageId)
-            .then(message => message.reply(`> ${reminder.message}`))
+            .then(message => message.reply(`\n > ${reminder.message}`))
             .catch(_ => {
                 channel.send(`Hey <@${reminder.userId}>, just reminding you about: \n> ${reminder.message}`);
             })

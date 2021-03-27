@@ -36,6 +36,6 @@ module.exports = {
 
         await createReminder(userId, channelId, messageId, reminderTime, remindMessage);
 
-        message.reply(`Reminder set for ~${reminderTime.toLocaleString()} \n >${remindMessage}`);
+        message.reply(`Reminder set for ~${reminderTime.toLocaleString()} \n> ${remindMessage}`);
     }
 };

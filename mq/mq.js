@@ -11,7 +11,7 @@ amqp.connect(process.env.CLOUDAMQP_URL, (err0, connection) => {
           if (err) throw err;
           channel.assertQueue(worker.queueName, { durable: true });
           channel.prefetch(1);
-          console.log(`Starting queue ${worker.queueName}`);
+          console.log(`Starting worker for queue ${worker.queueName}`);
           channel.consume(worker.queueName, (msg) => worker.execute(msg, channel), worker.options);
       });
   }

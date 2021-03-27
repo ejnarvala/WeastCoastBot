@@ -1,7 +1,7 @@
 const amqp = require('amqplib/callback_api');
 const fs = require('fs');
 
-const queueWorkerFiles = fs.readdirSync('./workers').filter(file => file.endsWith('.js'));
+const queueWorkerFiles = fs.readdirSync('./mq/workers').filter(file => file.endsWith('.js'));
 var workers = queueWorkerFiles.map( (file) => require(`./workers/${file}`));
 
 amqp.connect(process.env.CLOUDAMQP_URL, (err0, connection) => {

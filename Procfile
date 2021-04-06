@@ -1,1 +1,1 @@
-worker: node index.js
+worker: cd db && sequelize db:migrate && cd .. && node index.js

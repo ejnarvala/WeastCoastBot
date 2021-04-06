@@ -2,6 +2,8 @@ require("dotenv").config()
 const fs = require('fs');
 const { prefix } = require('./config.json')
 const Discord = require("discord.js")
+require("./mq/mq.js");
+const checkForReminders = require("./domain/reminders/reminders.js");
 
 // regex
 const reWordIsOver = /\w+ *(i*'*`*’*s|are) *over\b/
@@ -76,7 +78,9 @@ client.on("message", message => {
 });
 
 client.on("ready", () => {
-    console.log(`Logged in as ${client.user.tag}!`)
+    console.log(`Logged in as ${client.user.tag}!`);
 });
 
-client.login(process.env.BOT_TOKEN)
+client.login(process.env.BOT_TOKEN);
+
+setInterval(() => checkForReminders(client), 10000);

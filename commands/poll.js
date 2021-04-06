@@ -1,4 +1,4 @@
-const { PollService, Poll } = require('./domain/poll/poll_service.js');
+const { PollService, Poll } = require('../domain/poll/poll_service.js');
 const Discord = require("discord.js")
 
 const questionPrefix = "Poll: ";

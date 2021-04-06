@@ -2,7 +2,9 @@ require("dotenv").config()
 const fs = require('fs');
 const { prefix } = require('./config.json')
 const Discord = require("discord.js")
-require("./mq/mq.js");
+if (!process.env.DISABLE_MQ) {
+    require("./mq/mq.js");
+}
 const checkForReminders = require("./domain/reminders/reminders.js");
 
 // regex
@@ -70,7 +72,7 @@ client.on("message", message => {
         }
     
         if (message.content.trim().toLowerCase() == "good bot") {
-            message.reply("Thanks human :slight_smile:");
+            message.reply("Thanks :slight_smile:");
         }
     
     }
@@ -83,4 +85,6 @@ client.on("ready", () => {
 
 client.login(process.env.BOT_TOKEN);
 
-setInterval(() => checkForReminders(client), 10000);
+if (!process.env.DISABLE_REMINDERS) {
+    setInterval(() => checkForReminders(client), 10000);
+}

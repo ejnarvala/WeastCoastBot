@@ -11,12 +11,12 @@ class StatsService {
         let options = {playerIds: [playerId]};
         
         let averages;
-        if (endDate) {
-            if (startDate) {
+        if (startDate) {
+            if (endDate) {
                 options.startDate = startDate;
                 options.endDate = endDate;
             } else {
-                options.dates = [endDate];
+                options.dates = [startDate];
             }
             let stats = await client.getStats(options);
             averages = this.averagePlayerStats(stats);
@@ -47,14 +47,14 @@ class StatsService {
             fg3_pct: 0,
             ft_pct: 0
         }
-        let totals = stats.reduce((totals, next) => {
-            for (key of Object.keys(totals)) {
-                totals[key] += next[key]
+        let totals = stats.reduce((acc, next) => {
+            for (let key of Object.keys(acc)) {
+                acc[key] += next[key]
             }
+            return acc;
         }, initialStats);
-
         let averages = {};
-        for (key of Object.keys(totals)) {
+        for (let key of Object.keys(totals)) {
             averages[key] = totals[key] / stats.length;
         }
         averages.games_played = stats.length;

@@ -4,6 +4,10 @@ const fs = require('fs');
 const queueWorkerFiles = fs.readdirSync('./mq/workers').filter(file => file.endsWith('.js'));
 var workers = queueWorkerFiles.map( (file) => require(`./workers/${file}`));
 
+if (process.env.DISABLE_MQ) {
+  return;
+}
+
 amqp.connect(process.env.CLOUDAMQP_URL, (err0, connection) => {
   if (err0) throw error0;
   for (const worker of workers) {

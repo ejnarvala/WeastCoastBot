@@ -1,5 +1,5 @@
 const Discord = require("discord.js");
-const { HttpClient } = require('./lib/http/client.js');
+const { HttpClient } = require('../lib/http/client.js');
 
 
 class CryptoWatchClient extends HttpClient {

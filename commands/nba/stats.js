@@ -15,7 +15,7 @@ class Stats {
     toEmbedFields = (inline) => [
         {name: "PTS", value: this.stats.pts, inline: inline},
         {name: "AST", value: this.stats.ast, inline: inline},
-        {name: "REB", value: this.stats.dreb, inline: inline},
+        {name: "REB", value: this.stats.reb, inline: inline},
         {name: "FG", value: `${this.stats.fgm}/${this.stats.fga} (${formatPercent(this.stats.fg_pct)})`, inline: inline},
         {name: "3PT", value: `${this.stats.fg3m}/${this.stats.fg3a} (${formatPercent(this.stats.fg3_pct)})`, inline: inline},
         {name: "FT", value: `${this.stats.ftm}/${this.stats.fta} (${formatPercent(this.stats.ft_pct)})`, inline: inline},

@@ -5,7 +5,10 @@ const Discord = require("discord.js")
 if (!process.env.DISABLE_MQ) {
     require("./mq/mq.js");
 }
-const checkForReminders = require("./domain/reminders/reminders.js");
+
+if (!process.env.DISSABLE_CRON) {
+    require("./cron/cron.js");
+}
 
 // regex
 const reWordIsOver = /\w+ *(i*'*`*’*s|are) *over\b/
@@ -84,7 +87,3 @@ client.on("ready", () => {
 });
 
 client.login(process.env.BOT_TOKEN);
-
-if (!process.env.DISABLE_REMINDERS) {
-    setInterval(() => checkForReminders(client), 10000);
-}
